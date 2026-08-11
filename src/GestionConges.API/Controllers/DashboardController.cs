@@ -3,6 +3,7 @@ using GestionConges.Application.Common;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -13,9 +14,9 @@ namespace GestionConges.API.Controllers;
 public class DashboardController : ControllerBase
 {
     private readonly IDashboardService _dashboardService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public DashboardController(IDashboardService dashboardService, ICurrentUserService currentUser)
+    public DashboardController(IDashboardService dashboardService, CurrentUserServiceContract currentUser)
     {
         _dashboardService = dashboardService;
         _currentUser = currentUser;

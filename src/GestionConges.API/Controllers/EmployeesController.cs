@@ -4,6 +4,7 @@ using GestionConges.Application.DTOs.User;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -14,9 +15,9 @@ namespace GestionConges.API.Controllers;
 public class EmployeesController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public EmployeesController(IUserService userService, ICurrentUserService currentUser)
+    public EmployeesController(IUserService userService, CurrentUserServiceContract currentUser)
     {
         _userService = userService;
         _currentUser = currentUser;

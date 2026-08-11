@@ -17,3 +17,4 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Infrastructur
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Infrastructure\obj\Debug\net8.0\GestionConges.Infrastructure.pdb
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Infrastructure\obj\Debug\net8.0\GestionConges.Infrastructure.genruntimeconfig.cache
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Infrastructure\obj\Debug\net8.0\ref\GestionConges.Infrastructure.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Infrastructure\obj\Debug\net8.0\GestionConges.Infrastructure.sourcelink.json

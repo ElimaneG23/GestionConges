@@ -4,6 +4,7 @@ using GestionConges.Application.DTOs.Holiday;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -14,9 +15,9 @@ namespace GestionConges.API.Controllers;
 public class HolidaysController : ControllerBase
 {
     private readonly IHolidayService _holidayService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public HolidaysController(IHolidayService holidayService, ICurrentUserService currentUser)
+    public HolidaysController(IHolidayService holidayService, CurrentUserServiceContract currentUser)
     {
         _holidayService = holidayService;
         _currentUser = currentUser;

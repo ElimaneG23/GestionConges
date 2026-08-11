@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "GestionConges.API": {
+      "commandName": "Project",
+      "debugEngines": "managed-dotnet"
+    }
+  }
+}

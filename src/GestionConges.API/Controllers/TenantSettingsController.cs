@@ -4,6 +4,7 @@ using GestionConges.Application.DTOs.Tenant;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -17,9 +18,9 @@ namespace GestionConges.API.Controllers;
 public class TenantSettingsController : ControllerBase
 {
     private readonly ITenantService _tenantService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public TenantSettingsController(ITenantService tenantService, ICurrentUserService currentUser)
+    public TenantSettingsController(ITenantService tenantService, CurrentUserServiceContract currentUser)
     {
         _tenantService = tenantService;
         _currentUser = currentUser;

@@ -3,6 +3,7 @@ using GestionConges.Application.Common;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -13,9 +14,9 @@ namespace GestionConges.API.Controllers;
 public class NotificationsController : ControllerBase
 {
     private readonly INotificationService _notificationService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public NotificationsController(INotificationService notificationService, ICurrentUserService currentUser)
+    public NotificationsController(INotificationService notificationService, CurrentUserServiceContract currentUser)
     {
         _notificationService = notificationService;
         _currentUser = currentUser;

@@ -9,3 +9,4 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Domain\obj\De
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Domain\obj\Debug\net8.0\refint\GestionConges.Domain.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Domain\obj\Debug\net8.0\GestionConges.Domain.pdb
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Domain\obj\Debug\net8.0\ref\GestionConges.Domain.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Domain\obj\Debug\net8.0\GestionConges.Domain.sourcelink.json

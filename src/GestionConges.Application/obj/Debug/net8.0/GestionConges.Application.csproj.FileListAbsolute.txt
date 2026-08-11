@@ -13,3 +13,4 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\o
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\refint\GestionConges.Application.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.pdb
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\ref\GestionConges.Application.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.sourcelink.json

@@ -4,6 +4,7 @@ using GestionConges.Application.DTOs.LeaveType;
 using GestionConges.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Controllers;
 
@@ -14,9 +15,9 @@ namespace GestionConges.API.Controllers;
 public class LeaveTypesController : ControllerBase
 {
     private readonly ILeaveTypeService _leaveTypeService;
-    private readonly ICurrentUserService _currentUser;
+    private readonly CurrentUserServiceContract _currentUser;
 
-    public LeaveTypesController(ILeaveTypeService leaveTypeService, ICurrentUserService currentUser)
+    public LeaveTypesController(ILeaveTypeService leaveTypeService, CurrentUserServiceContract currentUser)
     {
         _leaveTypeService = leaveTypeService;
         _currentUser = currentUser;

@@ -8,6 +8,7 @@ using GestionConges.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using CurrentUserServiceContract = GestionConges.Application.Common.ICurrentUserService;
 
 namespace GestionConges.API.Extensions;
 
@@ -46,14 +47,14 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtService, JwtService>();
         services.AddHttpContextAccessor();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<CurrentUserServiceContract, CurrentUserService>();
         return services;
     }
 
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
     {
         var jwtSection = config.GetSection("Jwt");
-        var secret = jwtSection["Key"]!; // Changé de "Secret" à "Key" pour correspondre à appsettings.json
+        var secret = jwtSection["Secret"]!;
 
         services.AddAuthentication(options =>
         {
