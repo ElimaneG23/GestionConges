@@ -1,0 +1,15 @@
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.csproj.AssemblyReference.cache
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.AssemblyInfoInputs.cache
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.AssemblyInfo.cs
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.csproj.CoreCompileInputs.cache
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\bin\Debug\net8.0\GestionConges.Application.deps.json
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\bin\Debug\net8.0\GestionConges.Application.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\bin\Debug\net8.0\GestionConges.Application.pdb
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\bin\Debug\net8.0\GestionConges.Domain.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\bin\Debug\net8.0\GestionConges.Domain.pdb
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionC.9806050F.Up2Date
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\refint\GestionConges.Application.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\GestionConges.Application.pdb
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.Application\obj\Debug\net8.0\ref\GestionConges.Application.dll
