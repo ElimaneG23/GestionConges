@@ -1,9 +1,11 @@
 using GestionConges.Application.Common;
 using GestionConges.Application.DTOs.Auth;
 
-namespace GestionConges.Application.Interfaces;
-
-public interface IAuthService
+namespace GestionConges.Application.Interfaces
 {
-    Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto request);
+    public interface IAuthService
+    {
+        Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
+        Task<Result<TenantRegistrationResponseDto>> RegisterTenantAsync(RegisterTenantRequestDto dto);
+    }
 }

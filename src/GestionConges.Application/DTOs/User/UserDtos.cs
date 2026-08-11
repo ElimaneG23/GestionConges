@@ -26,7 +26,7 @@ namespace GestionConges.Application.DTOs.User
         public string FullName { get; set; } = string.Empty;
         public UserRole Role { get; set; }
         public bool IsActive { get; set; }
-        public Guid? CompanyId { get; set; }
+        public Guid? TenantId { get; set; }
         public DateTime? LastLoginAt { get; set; }
     }
 }
