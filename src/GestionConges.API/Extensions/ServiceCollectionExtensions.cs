@@ -19,7 +19,10 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration config)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(
+                config.GetConnectionString("DefaultConnection"),
+                b => b.MigrationsAssembly("GestionConges.Infrastructure")
+            ));
 
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
         return services;
@@ -50,7 +53,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration config)
     {
         var jwtSection = config.GetSection("Jwt");
-        var secret = jwtSection["Secret"]!;
+        var secret = jwtSection["Key"]!; // Changé de "Secret" à "Key" pour correspondre à appsettings.json
 
         services.AddAuthentication(options =>
         {

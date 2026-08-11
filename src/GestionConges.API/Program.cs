@@ -1,56 +1,80 @@
-using GestionConges.API.Extensions;
-using GestionConges.API.Middleware;
+using GestionConges.Application.Interfaces;
 using GestionConges.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ---- Services (voir GestionConges.API/Extensions/ServiceCollectionExtensions.cs) ----
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices();
-builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddCorsPolicy(builder.Configuration);
+// ==========================================
+// CONFIGURATION DU DbContext POUR POSTGRESQL
+// ==========================================
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("GestionConges.Infrastructure")
+    )
+);
 
+// Enregistrer IAppDbContext
+builder.Services.AddScoped<IAppDbContext>(provider =>
+    provider.GetRequiredService<AppDbContext>());
+
+// ==========================================
+// AJOUT DES SERVICES
+// ==========================================
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Gestion des Congés — API SaaS",
-        Version = "v1",
-        Description = "API multi-tenant pour la gestion des congés (SuperAdmin, Admin entreprise, Manager, Employé)."
-    });
+builder.Services.AddSwaggerGen();
 
-    // Support du Bearer token dans Swagger UI
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+// ==========================================
+// CONFIGURATION JWT (AJOUTER CE CODE)
+// ==========================================
+// Configuration de l'authentification JWT
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Description = "Entrez uniquement le token JWT (sans le préfixe 'Bearer ')."
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-            },
-            Array.Empty<string>()
-        }
-    });
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])
+        )
+    };
 });
 
+// ==========================================
+// CONFIGURATION CORS
+// ==========================================
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+// ==========================================
+// CONSTRUCTION DE L'APPLICATION
+// ==========================================
 var app = builder.Build();
 
-// ---- Pipeline HTTP ----
-app.UseMiddleware<ExceptionMiddleware>();
-
+// ==========================================
+// CONFIGURATION DU PIPELINE HTTP
+// ==========================================
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -58,25 +82,28 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("Default");
+
+// Order important: CORS -> Authentication -> Authorization
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
-// Applique automatiquement les migrations en développement (pratique pour démarrer vite).
-if (app.Environment.IsDevelopment() && builder.Configuration.GetValue<bool>("Database:ApplyMigrations"))
+// ==========================================
+// APPLICATION DES MIGRATIONS AUTO
+// ==========================================
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     try
     {
-        db.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
+        Console.WriteLine("✅ Migrations appliquées avec succès");
     }
-    catch (Exception exception)
+    catch (Exception ex)
     {
-        scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
-            .CreateLogger("DatabaseStartup")
-            .LogError(exception, "Database migration failed. The API is starting, but database-backed endpoints may be unavailable.");
+        Console.WriteLine($"❌ Erreur lors des migrations : {ex.Message}");
     }
 }
 
