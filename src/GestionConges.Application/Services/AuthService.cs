@@ -7,52 +7,63 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestionConges.Application.Services;
 
-
 public class AuthService : IAuthService
 {
-    private readonly IAppDbContext _db;
-    private readonly IJwtToken _jwtToken;
+    private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtToken _jwtToken;
 
     public AuthService(
-        IAppDbContext db,
-        IJwtToken jwtToken,
-        IPasswordHasher passwordHasher)
+        IAppDbContext context,
+        IPasswordHasher passwordHasher,
+        IJwtToken jwtToken)
     {
-        _db = db;
-        _jwtToken = jwtToken;
+        _context = context;
         _passwordHasher = passwordHasher;
+        _jwtToken = jwtToken;
     }
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
 
     public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto)
     {
         try
         {
             // 1. Trouver le tenant
-            var tenant = await _db.Tenants.FirstOrDefaultAsync(t => t.Subdomain == dto.Subdomain.ToLower());
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.Subdomain == dto.Subdomain.ToLower());
+
             if (tenant == null)
                 return Result<LoginResponseDto>.Fail("Tenant non trouvé");
 
+            if (!tenant.IsActive)
+                return Result<LoginResponseDto>.Fail("Ce tenant n'est pas actif");
+
             // 2. Trouver l'utilisateur
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email && u.TenantId == tenant.Id);
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == dto.Email && u.TenantId == tenant.Id);
+
             if (user == null)
                 return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
 
-            // 3. Vérifier le mot de passe
-            if (!_passwordHasher.Verify(dto.Password, user.PasswordHash))
-                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
-
-            // 4. Vérifier le statut
-            if (!user.IsActive || !tenant.IsActive)
+            // 3. Vérifier le statut
+            if (!user.IsActive)
                 return Result<LoginResponseDto>.Fail("Compte inactif");
 
-            // 5. Générer le token
+            // 4. Vérifier le mot de passe
+            if (!_passwordHasher.Verify(user.PasswordHash, dto.Password))
+                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
+
+            // 5. Générer le token JWT
             var (token, expiresAt) = _jwtToken.GenerateToken(user);
 
             // 6. Créer la réponse
             var response = new LoginResponseDto
             {
                 Token = token,
+                RefreshToken = string.Empty,
                 TokenExpiry = expiresAt,
                 User = new UserInfoDto
                 {
@@ -62,7 +73,14 @@ public class AuthService : IAuthService
                     LastName = user.LastName,
                     Role = user.Role.ToString(),
                     TenantId = user.TenantId ?? Guid.Empty,
-                    RemainingLeaveDays = 0
+                    RemainingLeaveDays = user.RemainingLeaveDays switch
+                    {
+                        decimal d => d,
+                        int i => i,
+                        long l => l,
+                        string s when decimal.TryParse(s, out var parsed) => parsed,
+                        _ => 0m
+                    }
                 },
                 Tenant = new TenantInfoDto
                 {
@@ -83,13 +101,27 @@ public class AuthService : IAuthService
         }
     }
 
+    // ==========================================
+    // REGISTER TENANT
+    // ==========================================
+
     public async Task<Result<TenantRegistrationResponseDto>> RegisterTenantAsync(RegisterTenantRequestDto dto)
     {
         try
         {
             // Vérifier si le sous-domaine existe déjà
-            if (await _db.Tenants.AnyAsync(t => t.Subdomain == dto.Subdomain.ToLower()))
+            var existingTenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.Subdomain == dto.Subdomain.ToLower());
+
+            if (existingTenant != null)
                 return Result<TenantRegistrationResponseDto>.Fail("Ce sous-domaine est déjà utilisé");
+
+            // Vérifier si l'email existe déjà
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == dto.AdminEmail);
+
+            if (existingUser != null)
+                return Result<TenantRegistrationResponseDto>.Fail("Cet email est déjà utilisé");
 
             // Créer le tenant
             var tenant = new Tenant
@@ -97,11 +129,13 @@ public class AuthService : IAuthService
                 Id = Guid.NewGuid(),
                 Name = dto.CompanyName,
                 Subdomain = dto.Subdomain.ToLower(),
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
+                PrimaryColor = "#2563EB",
+                SecondaryColor = "#1E293B",
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             };
 
-            await _db.Tenants.AddAsync(tenant);
+            await _context.Tenants.AddAsync(tenant);
 
             // Créer l'admin
             var admin = new User
@@ -112,17 +146,55 @@ public class AuthService : IAuthService
                 LastName = dto.AdminLastName,
                 PasswordHash = _passwordHasher.Hash(dto.AdminPassword),
                 Role = UserRole.Admin,
+                IsActive = true,
                 TenantId = tenant.Id,
                 HireDate = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow,
-                IsActive = true
+                RemainingLeaveDays = 0m,
+                CreatedAt = DateTime.UtcNow
             };
 
-            await _db.Users.AddAsync(admin);
-            await _db.SaveChangesAsync();
+            await _context.Users.AddAsync(admin);
 
             // Créer les types de congés par défaut
-            // ... (créer des LeaveType par défaut)
+            var defaultLeaveTypes = new[]
+            {
+                new LeaveType
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Congés payés",
+                    Description = "Congés annuels payés",
+                    DefaultDaysPerYear = 25,
+                    RequiresJustification = false,
+                    IsActive = true,
+                    TenantId = tenant.Id,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new LeaveType
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "RTT",
+                    Description = "Réduction du temps de travail",
+                    DefaultDaysPerYear = 12,
+                    RequiresJustification = false,
+                    IsActive = true,
+                    TenantId = tenant.Id,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new LeaveType
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Maladie",
+                    Description = "Arrêt maladie",
+                    DefaultDaysPerYear = 0,
+                    RequiresJustification = false,
+                    IsActive = true,
+                    TenantId = tenant.Id,
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+
+            await _context.LeaveTypes.AddRangeAsync(defaultLeaveTypes);
+            await _context.SaveChangesAsync();
 
             var response = new TenantRegistrationResponseDto
             {
@@ -138,9 +210,12 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
-            return Result<TenantRegistrationResponseDto>.Fail($"Erreur: {ex.Message}");
+            return Result<TenantRegistrationResponseDto>.Fail($"Erreur lors de la création du tenant: {ex.Message}");
         }
     }
 
-    // ... Implémenter les autres méthodes
+    public Task<Result<bool>> ChangePasswordAsync(Guid userId, ChangePasswordRequestDto dto)
+    {
+        throw new NotImplementedException();
+    }
 }

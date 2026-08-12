@@ -899,7 +899,8 @@
       "LoginRequestDto": {
         "required": [
           "email",
-          "password"
+          "password",
+          "subdomain"
         ],
         "type": "object",
         "properties": {
@@ -913,8 +914,8 @@
             "type": "string"
           },
           "subdomain": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           }
         },
         "additionalProperties": false

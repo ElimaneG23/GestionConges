@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionConges.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2c19b1e9b2288e4a8aaa30f44a989b5b1fdca9f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5c6ad9b6ffc23692d260cf2278d1d58431cf9907")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionConges.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionConges.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

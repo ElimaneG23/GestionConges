@@ -33,4 +33,6 @@ public class User : BaseEntity
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public string FullName => $"{FirstName} {LastName}";
+
+    public object RemainingLeaveDays { get; set; }
 }
