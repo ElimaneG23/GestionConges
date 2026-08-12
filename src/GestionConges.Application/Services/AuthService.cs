@@ -11,16 +11,16 @@ namespace GestionConges.Application.Services;
 public class AuthService : IAuthService
 {
     private readonly IAppDbContext _db;
-    private readonly IJwtService _jwtService;
+    private readonly IJwtToken _jwtToken;
     private readonly IPasswordHasher _passwordHasher;
 
     public AuthService(
         IAppDbContext db,
-        IJwtService jwtService,
+        IJwtToken jwtToken,
         IPasswordHasher passwordHasher)
     {
         _db = db;
-        _jwtService = jwtService;
+        _jwtToken = jwtToken;
         _passwordHasher = passwordHasher;
     }
 
@@ -47,7 +47,7 @@ public class AuthService : IAuthService
                 return Result<LoginResponseDto>.Fail("Compte inactif");
 
             // 5. Générer le token
-            var (token, expiresAt) = _jwtService.GenerateToken(user);
+            var (token, expiresAt) = _jwtToken.GenerateToken(user);
 
             // 6. Créer la réponse
             var response = new LoginResponseDto

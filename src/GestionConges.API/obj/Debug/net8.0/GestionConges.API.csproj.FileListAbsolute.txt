@@ -22,7 +22,6 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Humanizer.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Bcl.TimeProvider.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
@@ -124,10 +123,14 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionC.9997DDFF.Up2Date
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionConges.API.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\refint\GestionConges.API.dll
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionConges.API.pdb
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionConges.API.genruntimeconfig.cache
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\ref\GestionConges.API.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Bcl.Cryptography.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Extensions.Configuration.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\bin\Debug\net8.0\System.Formats.Asn1.dll

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using GestionConges.Application.DTOs.Tenant;
+using GestionConges.Application.DTOs.User;
+using System.ComponentModel.DataAnnotations;
 
 namespace GestionConges.Application.DTOs.Auth
 {
@@ -6,12 +8,15 @@ namespace GestionConges.Application.DTOs.Auth
     {
         [Required(ErrorMessage = "L'email est requis")]
         [EmailAddress(ErrorMessage = "Format d'email invalide")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Le mot de passe est requis")]
         [MinLength(6, ErrorMessage = "Le mot de passe doit contenir au moins 6 caractères")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
-        public string Subdomain { get; set; }
+        [Required(ErrorMessage = "Le sous-domaine est requis")]
+        public string Subdomain { get; set; } = string.Empty;
     }
+
+   
 }

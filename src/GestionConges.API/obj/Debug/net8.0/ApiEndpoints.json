@@ -16,6 +16,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "GestionConges.API.Controllers.AuthController",
+    "Method": "RegisterTenant",
+    "RelativePath": "api/Auth/register-tenant",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "GestionConges.Application.DTOs.Auth.RegisterTenantRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "GestionConges.API.Controllers.DashboardController",
     "Method": "Admin",
     "RelativePath": "api/dashboard/admin",

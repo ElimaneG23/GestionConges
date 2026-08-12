@@ -6,6 +6,6 @@ namespace GestionConges.Application.DTOs.Auth
     {
         [Required(ErrorMessage = "L'email est requis")]
         [EmailAddress(ErrorMessage = "Format d'email invalide")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
     }
 }

@@ -36,6 +36,37 @@
         }
       }
     },
+    "/api/Auth/register-tenant": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTenantRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTenantRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterTenantRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/dashboard/employee": {
       "get": {
         "tags": [
@@ -866,13 +897,22 @@
         "additionalProperties": false
       },
       "LoginRequestDto": {
+        "required": [
+          "email",
+          "password"
+        ],
         "type": "object",
         "properties": {
           "email": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "password": {
+            "minLength": 6,
+            "type": "string"
+          },
+          "subdomain": {
             "type": "string",
             "nullable": true
           }
@@ -886,6 +926,52 @@
             "type": "boolean"
           },
           "managerComment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterTenantRequestDto": {
+        "required": [
+          "adminEmail",
+          "adminFirstName",
+          "adminLastName",
+          "adminPassword",
+          "companyName",
+          "subdomain"
+        ],
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "subdomain": {
+            "maxLength": 50,
+            "minLength": 1,
+            "pattern": "^[a-z0-9]+$",
+            "type": "string"
+          },
+          "adminEmail": {
+            "minLength": 1,
+            "type": "string",
+            "format": "email"
+          },
+          "adminPassword": {
+            "minLength": 8,
+            "type": "string"
+          },
+          "adminFirstName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "adminLastName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "adminPhone": {
             "type": "string",
             "nullable": true
           }
