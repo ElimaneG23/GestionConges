@@ -2,15 +2,6 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Gestion Congés API",
-    "description": "API de gestion de congés SaaS multi-tenant",
-    "contact": {
-      "name": "Support",
-      "email": "support@gestionconges.com"
-    },
-    "license": {
-      "name": "MIT License",
-      "url": "https://opensource.org/licenses/MIT"
-    },
     "version": "v1"
   },
   "paths": {
@@ -951,8 +942,7 @@
       "LoginRequestDto": {
         "required": [
           "email",
-          "password",
-          "subdomain"
+          "password"
         ],
         "type": "object",
         "properties": {
@@ -963,10 +953,6 @@
           },
           "password": {
             "minLength": 6,
-            "type": "string"
-          },
-          "subdomain": {
-            "minLength": 1,
             "type": "string"
           }
         },

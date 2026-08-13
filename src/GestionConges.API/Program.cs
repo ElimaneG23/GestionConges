@@ -20,17 +20,17 @@ builder.Services.AddSwaggerGen(c =>
     {
         Title = "Gestion Congés API",
         Version = "v1",
-        Description = "API de gestion de congés SaaS multi-tenant",
-        Contact = new Microsoft.OpenApi.Models.OpenApiContact
-        {
-            Name = "Support",
-            Email = "support@gestionconges.com"
-        },
-        License = new Microsoft.OpenApi.Models.OpenApiLicense
-        {
-            Name = "MIT License",
-            Url = new Uri("https://opensource.org/licenses/MIT")
-        }
+        //Description = "API de gestion de congés SaaS multi-tenant",
+        //Contact = new Microsoft.OpenApi.Models.OpenApiContact
+        //{
+        //    Name = "Support",
+        //    Email = "support@gestionconges.com"
+        //},
+        //License = new Microsoft.OpenApi.Models.OpenApiLicense
+        //{
+        //    Name = "MIT License",
+        //    Url = new Uri("https://opensource.org/licenses/MIT")
+        //}
     });
 
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme

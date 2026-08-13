@@ -46,4 +46,55 @@ public class JwtService : IJwtService
 
         return (new JwtSecurityTokenHandler().WriteToken(token), expiresAt);
     }
+
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+        using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    public ClaimsPrincipal GetPrincipalFromToken(string token)
+    {
+        var jwtSection = _configuration.GetSection("Jwt");
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(jwtSection["Secret"]!);
+
+        var validationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = !string.IsNullOrEmpty(jwtSection["Issuer"]),
+            ValidIssuer = jwtSection["Issuer"],
+            ValidateAudience = !string.IsNullOrEmpty(jwtSection["Audience"]),
+            ValidAudience = jwtSection["Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+
+        try
+        {
+            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
+            return principal;
+        }
+        catch
+        {
+            return new ClaimsPrincipal(new ClaimsIdentity());
+        }
+    }
+
+    public bool ValidateToken(string token)
+    {
+        var principal = GetPrincipalFromToken(token);
+        return principal?.Identity?.IsAuthenticated ?? false;
+    }
+
+    public Guid? GetUserIdFromToken(string token)
+    {
+        var principal = GetPrincipalFromToken(token);
+        var idClaim = principal?.FindFirst(ClaimTypes.NameIdentifier) ?? principal?.FindFirst(JwtRegisteredClaimNames.Sub);
+        if (idClaim is null) return null;
+        return Guid.TryParse(idClaim.Value, out var guid) ? guid : null;
+    }
 }

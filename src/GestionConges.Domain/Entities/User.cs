@@ -18,6 +18,8 @@ public class User : BaseEntity
     public string PasswordHash { get; set; } = string.Empty;
     public UserRole Role { get; set; }
     public bool IsActive { get; set; } = true;
+    public DateTime? LastLoginAt { get; set; }
+
 
     // Un employé est rattaché à un manager (auto-référence)
     public Guid? ManagerId { get; set; }
@@ -35,5 +37,4 @@ public class User : BaseEntity
     public string FullName => $"{FirstName} {LastName}";
 
     public decimal RemainingLeaveDays { get; set; } = 30m;
-    public DateTime LastLoginAt { get; set; }
 }

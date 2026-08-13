@@ -134,4 +134,3 @@ C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionConges.API.pdb
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\GestionConges.API.genruntimeconfig.cache
 C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\ref\GestionConges.API.dll
-C:\Users\HP\Documents\MineProjects\GestionConges\src\GestionConges.API\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
