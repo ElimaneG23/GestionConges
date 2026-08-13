@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8089b21fbf9aa2dcde110774d5974be2eca3efb2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e487fcaa7994015ca9d96e07a9366cd7ded282a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

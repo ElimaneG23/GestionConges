@@ -1,13 +1,27 @@
+using BCrypt.Net;
 using GestionConges.Application.Interfaces;
 
-namespace GestionConges.Infrastructure.Security;
-
-/// <summary>
-/// Hachage de mot de passe via BCrypt.Net-Next (sel intégré, résistant au brute-force).
-/// </summary>
-public class PasswordHasher : IPasswordHasher
+namespace GestionConges.Infrastructure.Security
 {
-    public string Hash(string password) => BCrypt.Net.BCrypt.HashPassword(password, workFactor: 12);
+    public class PasswordHasher : IPasswordHasher
+    {
+        public string Hash(string password)
+        {
+            // Utiliser BCrypt avec la version 2b (plus compatible)
+            return BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt(12));
+        }
 
-    public bool Verify(string password, string hash) => BCrypt.Net.BCrypt.Verify(password, hash);
+        public bool Verify(string passwordHash, string password)
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, passwordHash);
+            }
+            catch (BCrypt.Net.SaltParseException)
+            {
+                // Si le salt est invalide, recréer le hash
+                return false;
+            }
+        }
+    }
 }
