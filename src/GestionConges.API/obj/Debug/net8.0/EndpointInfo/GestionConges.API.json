@@ -1,8 +1,17 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "GestionConges.API",
-    "version": "1.0"
+    "title": "Gestion Congés API",
+    "description": "API de gestion de congés SaaS multi-tenant",
+    "contact": {
+      "name": "Support",
+      "email": "support@gestionconges.com"
+    },
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    },
+    "version": "v1"
   },
   "paths": {
     "/api/Auth/login": {
@@ -1071,6 +1080,19 @@
         },
         "additionalProperties": false
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "apiKey",
+        "description": "JWT Authorization header using the Bearer scheme. \r\n\r\nEnter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+        "name": "Authorization",
+        "in": "header"
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "Bearer": [ ]
+    }
+  ]
 }

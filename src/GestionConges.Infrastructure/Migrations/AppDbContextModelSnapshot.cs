@@ -367,6 +367,9 @@ namespace GestionConges.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<decimal>("RemainingLeaveDays")
+                        .HasColumnType("numeric");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasMaxLength(30)

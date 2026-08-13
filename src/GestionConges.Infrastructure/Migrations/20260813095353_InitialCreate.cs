@@ -118,6 +118,7 @@ namespace GestionConges.Infrastructure.Migrations
                     ManagerId = table.Column<Guid>(type: "uuid", nullable: true),
                     JobTitle = table.Column<string>(type: "text", nullable: true),
                     HireDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    RemainingLeaveDays = table.Column<decimal>(type: "numeric", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },

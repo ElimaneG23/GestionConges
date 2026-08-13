@@ -1,6 +1,6 @@
 ﻿using GestionConges.Application.Interfaces;
 using GestionConges.Domain.Entities;
-using global::Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,64 +11,63 @@ namespace GestionConges.Application.Services;
 public class JwtTokenService : IJwtToken
 {
     private readonly IConfiguration _configuration;
+    private readonly JwtSecurityTokenHandler _tokenHandler;
 
     public JwtTokenService(IConfiguration configuration)
     {
         _configuration = configuration;
+        _tokenHandler = new JwtSecurityTokenHandler();
     }
 
     public (string token, DateTime expiresAt) GenerateToken(User user)
     {
         var jwtSettings = _configuration.GetSection("Jwt");
+
+        // Récupérer la clé (correction : utiliser "Key" pas "Secret")
+        var keyValue = jwtSettings["Key"]
+            ?? throw new InvalidOperationException("La clé JWT est manquante dans la configuration.");
+
+        // Durée d'expiration
         var expiryHours = double.Parse(jwtSettings["ExpiryHours"] ?? "8");
         var expiresAt = DateTime.UtcNow.AddHours(expiryHours);
 
+        // Claims de l'utilisateur
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
-            new(ClaimTypes.Name, string.IsNullOrWhiteSpace(user.FullName) ? user.FirstName : user.FullName),
+            new(ClaimTypes.Name, user.FullName ?? $"{user.FirstName} {user.LastName}"),
             new(ClaimTypes.Role, user.Role.ToString()),
+            new("userId", user.Id.ToString()),
+            new("email", user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        if (user.TenantId is not null)
+        // Ajouter le tenantId si présent
+        if (user.TenantId != Guid.Empty)
         {
-            claims.Add(new("tenantId", user.TenantId.Value.ToString()));
+            claims.Add(new("tenantId", user.TenantId.ToString()));
         }
 
-        var secret = jwtSettings["Secret"]
-            ?? throw new InvalidOperationException(
-                "La clé JWT est manquante dans la configuration."
-            );
-        var keyValue = jwtSettings["Key"]
-            ?? throw new InvalidOperationException(
-                "La clé JWT est manquante dans la configuration."
-            );
+        // Ajouter les jours de congés restants
+        claims.Add(new("remainingLeaveDays", user.RemainingLeaveDays.ToString()));
 
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(keyValue)
-        );
-
-        // Credentials de signature
-        var credentials = new SigningCredentials(
-            key,
-            SecurityAlgorithms.HmacSha256
-        );
+        // Création de la clé de signature
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // Création du token
         var token = new JwtSecurityToken(
-            issuer: jwtSettings["Issuer"],
-            audience: jwtSettings["Audience"],
+            issuer: jwtSettings["Issuer"] ?? "GestionConges.API",
+            audience: jwtSettings["Audience"] ?? "GestionConges.Client",
             claims: claims,
             expires: expiresAt,
             signingCredentials: credentials
         );
 
-        // Transformation du JWT en chaîne de caractères
-        var tokenString = new JwtSecurityTokenHandler()
-            .WriteToken(token);
+        // Transformation en string
+        var tokenString = _tokenHandler.WriteToken(token);
 
         return (tokenString, expiresAt);
     }

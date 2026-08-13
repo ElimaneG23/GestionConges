@@ -8,6 +8,8 @@ namespace GestionConges.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+
+
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -17,13 +19,6 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-    // ==========================================
-    // AUTHENTIFICATION (Public)
-    // ==========================================
-
-    /// <summary>
-    /// US1.1 - Connexion utilisateur avec JWT (tous rôles)
-    /// </summary>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
     {
@@ -34,14 +29,6 @@ public class AuthController : ControllerBase
         return result.ToActionResult(this);
     }
 
-    // ==========================================
-    // INSCRIPTION TENANT (Public ou SuperAdmin)
-    // ==========================================
-
-    /// <summary>
-    /// Création d'un nouveau tenant (entreprise) avec son admin
-    /// Utilisé par le Super Admin ou en self-service
-    /// </summary>
     [HttpPost("register-tenant")]
     public async Task<IActionResult> RegisterTenant([FromBody] RegisterTenantRequestDto dto)
     {

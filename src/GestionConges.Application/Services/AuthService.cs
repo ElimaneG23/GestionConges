@@ -76,10 +76,10 @@ public class AuthService : IAuthService
                     RemainingLeaveDays = user.RemainingLeaveDays switch
                     {
                         decimal d => d,
-                        int i => i,
-                        long l => l,
-                        string s when decimal.TryParse(s, out var parsed) => parsed,
-                        _ => 0m
+                        //int i => i,
+                        //long l => l,
+                        //string s when decimal.TryParse(s, out var parsed) => parsed,
+                        //_ => 0m
                     }
                 },
                 Tenant = new TenantInfoDto
@@ -149,7 +149,7 @@ public class AuthService : IAuthService
                 IsActive = true,
                 TenantId = tenant.Id,
                 HireDate = DateTime.UtcNow,
-                RemainingLeaveDays = 0m,
+                RemainingLeaveDays = 30m,
                 CreatedAt = DateTime.UtcNow
             };
 

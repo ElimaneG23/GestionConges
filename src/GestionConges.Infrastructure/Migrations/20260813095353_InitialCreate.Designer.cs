@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestionConges.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260811094002_InitialCreate")]
+    [Migration("20260813095353_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -369,6 +369,9 @@ namespace GestionConges.Infrastructure.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<decimal>("RemainingLeaveDays")
+                        .HasColumnType("numeric");
 
                     b.Property<string>("Role")
                         .IsRequired()
