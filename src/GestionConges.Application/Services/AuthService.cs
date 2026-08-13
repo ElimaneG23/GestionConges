@@ -31,9 +31,25 @@ public class AuthService : IAuthService
     {
         try
         {
-            // 1. Trouver le tenant
+            // 1. Trouver l'utilisateur par email (avec son tenant)
+            var user = await _context.Users
+                .Include(u => u.Tenant)
+                .FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+            if (user == null)
+                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
+
+            // 2. Vérifier le mot de passe
+            if (!_passwordHasher.Verify(user.PasswordHash, dto.Password))
+                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
+
+            // 3. Vérifier que l'utilisateur a un tenant
+            if (user.TenantId == null)
+                return Result<LoginResponseDto>.Fail("Aucun tenant associé à cet utilisateur");
+
+            // 4. Récupérer le tenant
             var tenant = await _context.Tenants
-                .FirstOrDefaultAsync(t => t.Subdomain == dto.Subdomain.ToLower());
+                .FirstOrDefaultAsync(t => t.Id == user.TenantId);
 
             if (tenant == null)
                 return Result<LoginResponseDto>.Fail("Tenant non trouvé");
@@ -41,29 +57,26 @@ public class AuthService : IAuthService
             if (!tenant.IsActive)
                 return Result<LoginResponseDto>.Fail("Ce tenant n'est pas actif");
 
-            // 2. Trouver l'utilisateur
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == dto.Email && u.TenantId == tenant.Id);
-
-            if (user == null)
-                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
-
-            // 3. Vérifier le statut
+            // 5. Vérifier le statut de l'utilisateur
             if (!user.IsActive)
                 return Result<LoginResponseDto>.Fail("Compte inactif");
 
-            // 4. Vérifier le mot de passe
-            if (!_passwordHasher.Verify(user.PasswordHash, dto.Password))
-                return Result<LoginResponseDto>.Fail("Email ou mot de passe incorrect");
-
-            // 5. Générer le token JWT
+            // 6. Générer le token JWT et refresh token
             var (token, expiresAt) = _jwtToken.GenerateToken(user);
+            var refreshToken = _jwtToken.GenerateRefreshToken();
 
-            // 6. Créer la réponse
+            // 7. Sauvegarder le refresh token
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync();
+
+            // 8. Créer la réponse
             var response = new LoginResponseDto
             {
-                Token = token,
-                RefreshToken = string.Empty,
+                AccessToken = token,                    // ✅ Changé : Token → AccessToken
+                TokenType = "Bearer",                   // ✅ Ajouté
+                ExpiresIn = (int)(expiresAt - DateTime.UtcNow).TotalSeconds, // ✅ Ajouté
+                RefreshToken = refreshToken,            // ✅ Ajouté
                 TokenExpiry = expiresAt,
                 User = new UserInfoDto
                 {
@@ -73,14 +86,7 @@ public class AuthService : IAuthService
                     LastName = user.LastName,
                     Role = user.Role.ToString(),
                     TenantId = user.TenantId ?? Guid.Empty,
-                    RemainingLeaveDays = user.RemainingLeaveDays switch
-                    {
-                        decimal d => d,
-                        //int i => i,
-                        //long l => l,
-                        //string s when decimal.TryParse(s, out var parsed) => parsed,
-                        //_ => 0m
-                    }
+                    RemainingLeaveDays = user.RemainingLeaveDays
                 },
                 Tenant = new TenantInfoDto
                 {
@@ -217,5 +223,100 @@ public class AuthService : IAuthService
     public Task<Result<bool>> ChangePasswordAsync(Guid userId, ChangePasswordRequestDto dto)
     {
         throw new NotImplementedException();
+    }
+    // ==========================================
+    // REFRESH TOKEN
+    // ==========================================
+
+    public async Task<Result<RefreshTokenResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto dto)
+    {
+        try
+        {
+            // 1. Trouver l'utilisateur avec ce refresh token
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
+
+            if (user == null)
+                return Result<RefreshTokenResponseDto>.Fail("Refresh token invalide");
+
+            // 2. Vérifier si le refresh token est expiré
+            if (user.RefreshTokenExpiry < DateTime.UtcNow)
+                return Result<RefreshTokenResponseDto>.Fail("Refresh token expiré");
+
+            // 3. Récupérer le tenant
+            var tenant = await _context.Tenants
+                .FirstOrDefaultAsync(t => t.Id == user.TenantId);
+
+            if (tenant == null)
+                return Result<RefreshTokenResponseDto>.Fail("Tenant non trouvé");
+
+            // 4. Générer un nouveau token
+            var (newToken, expiresAt) = _jwtToken.GenerateToken(user);
+            var newRefreshToken = _jwtToken.GenerateRefreshToken();
+
+            // 5. Mettre à jour le refresh token
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            await _context.SaveChangesAsync();
+
+            // 6. Créer la réponse
+            var response = new RefreshTokenResponseDto
+            {
+                AccessToken = newToken,
+                RefreshToken = newRefreshToken,
+                ExpiresIn = (int)(expiresAt - DateTime.UtcNow).TotalSeconds,
+                TokenExpiry = expiresAt
+            };
+
+            return Result<RefreshTokenResponseDto>.Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return Result<RefreshTokenResponseDto>.Fail($"Erreur lors du rafraîchissement: {ex.Message}");
+        }
+    }
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    public async Task<Result<bool>> LogoutAsync(Guid userId)
+    {
+        try
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+                return Result<bool>.Fail("Utilisateur non trouvé");
+
+            // Supprimer le refresh token
+            user.RefreshToken = null;
+            user.RefreshTokenExpiry = null;
+            await _context.SaveChangesAsync();
+
+            return Result<bool>.Ok(true);
+        }
+        catch (Exception ex)
+        {
+            return Result<bool>.Fail($"Erreur lors de la déconnexion: {ex.Message}");
+        }
+    }
+
+    // ==========================================
+    // VALIDATE TOKEN
+    // ==========================================
+
+    public async Task<Result<bool>> ValidateTokenAsync(string token)
+    {
+        try
+        {
+            var isValid = _jwtToken.ValidateToken(token);
+            return Result<bool>.Ok(isValid);
+        }
+        catch
+        {
+            return Result<bool>.Ok(false);
+        }
     }
 }

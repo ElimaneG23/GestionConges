@@ -35,4 +35,5 @@ public class User : BaseEntity
     public string FullName => $"{FirstName} {LastName}";
 
     public decimal RemainingLeaveDays { get; set; } = 30m;
+    public DateTime LastLoginAt { get; set; }
 }

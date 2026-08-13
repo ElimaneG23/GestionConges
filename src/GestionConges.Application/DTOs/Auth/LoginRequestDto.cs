@@ -14,8 +14,7 @@ namespace GestionConges.Application.DTOs.Auth
         [MinLength(6, ErrorMessage = "Le mot de passe doit contenir au moins 6 caractères")]
         public string Password { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Le sous-domaine est requis")]
-        public string Subdomain { get; set; } = string.Empty;
+        // Sous-domaine non requis pour login via email
     }
 
    

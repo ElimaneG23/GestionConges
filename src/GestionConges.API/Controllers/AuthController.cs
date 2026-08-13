@@ -1,6 +1,7 @@
 using GestionConges.API.Common;
 using GestionConges.Application.DTOs.Auth;
 using GestionConges.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -42,5 +43,47 @@ public class AuthController : ControllerBase
 
         return result.ToActionResult(this);
     }
+
+    /// <summary>
+    /// Rafraîchir le token JWT
+    /// </summary>
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.RefreshTokenAsync(dto);
+        return result.ToActionResult(this);
+    }
+
+    /// <summary>
+    /// Déconnexion utilisateur
+    /// </summary>
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = User.FindFirst("userId")?.Value;
+        if (string.IsNullOrEmpty(userId))
+            return Unauthorized();
+
+        var result = await _authService.LogoutAsync(Guid.Parse(userId));
+        return result.ToActionResult(this);
+    }
+
+    /// <summary>
+    /// Vérifier si le token est valide
+    /// </summary>
+    //[HttpGet("validate-token")]
+    //public async Task<IActionResult> ValidateToken()
+    //{
+    //    var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+    //    if (string.IsNullOrEmpty(token))
+    //        return Unauthorized();
+
+    //    var result = await _authService.ValidateTokenAsync(token);
+    //    return result.ToActionResult(this);
+    //}
 
 }

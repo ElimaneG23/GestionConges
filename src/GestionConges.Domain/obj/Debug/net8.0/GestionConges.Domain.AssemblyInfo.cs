@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionConges.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8089b21fbf9aa2dcde110774d5974be2eca3efb2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8780a0eb4aea0747bbfff36ac69596ff64d541a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionConges.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionConges.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

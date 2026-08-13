@@ -4,11 +4,13 @@ namespace GestionConges.Application.DTOs.Auth
 {
     public class LoginResponseDto
     {
-        public string Token { get; set; } = string.Empty;
+        public string AccessToken { get; set; } = string.Empty;
+        public string TokenType { get; set; } = "Bearer";
+        public int ExpiresIn { get; set; }
         public string RefreshToken { get; set; } = string.Empty;
         public DateTime TokenExpiry { get; set; }
-        public UserInfoDto User { get; set; } = new();
-        public TenantInfoDto Tenant { get; set; } = new();
+        public UserInfoDto User { get; set; }
+        public TenantInfoDto Tenant { get; set; }
     }
 
     public class UserInfoDto

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e487fcaa7994015ca9d96e07a9366cd7ded282a7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8780a0eb4aea0747bbfff36ac69596ff64d541a7")]
 [assembly: System.Reflection.AssemblyProductAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GestionConges.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

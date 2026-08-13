@@ -7,5 +7,15 @@ namespace GestionConges.Application.Interfaces
     {
         Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
         Task<Result<TenantRegistrationResponseDto>> RegisterTenantAsync(RegisterTenantRequestDto dto);
+       
+     
+            Task<Result<RefreshTokenResponseDto>> RefreshTokenAsync(RefreshTokenRequestDto dto);
+
+           
+            Task<Result<bool>> LogoutAsync(Guid userId);
+
+            
+            Task<Result<bool>> ValidateTokenAsync(string token);
+        
     }
 }
