@@ -5,7 +5,7 @@ namespace GestionConges.Domain.Entities;
 /// <summary>
 /// Solde de congés d'un employé pour un type de congé donné et une année donnée.
 /// </summary>
-public class LeaveBalance : TenantEntity
+public class LeaveBalance : BaseEntity
 {
     public Guid UserId { get; set; }
     public User? User { get; set; }

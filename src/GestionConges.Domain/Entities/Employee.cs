@@ -6,7 +6,7 @@ namespace GestionConges.Domain.Entities
     /// Fiche employé (US2.1, US2.2, US2.3). Rattachée à un User pour l'authentification
     /// et, optionnellement, à un Manager (auto-référence) pour le circuit de validation.
     /// </summary>
-    public class Employee : TenantEntity
+    public class Employee : BaseEntity
     {
         public Guid UserId { get; set; }
         public virtual User User { get; set; } = null!;

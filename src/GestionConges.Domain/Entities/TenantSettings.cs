@@ -5,7 +5,7 @@ namespace GestionConges.Domain.Entities;
 /// <summary>
 /// Règles RH paramétrables par l'Admin d'une entreprise (Sprint 9).
 /// </summary>
-public class TenantSettings : TenantEntity
+public class TenantSettings : BaseEntity
 {
     public int WorkingDaysPerWeek { get; set; } = 5;
     public bool CarryOverAllowed { get; set; } = false;

@@ -5,7 +5,7 @@ namespace GestionConges.Domain.Entities;
 /// <summary>
 /// Type de congé configurable par entreprise (congés payés, RTT, maladie...).
 /// </summary>
-public class LeaveType : TenantEntity
+public class LeaveType : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }

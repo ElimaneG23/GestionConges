@@ -6,7 +6,7 @@ namespace GestionConges.Domain.Entities;
 /// Jour férié / chômé configuré par l'Admin (Sprint 9), utilisé pour exclure
 /// les jours du calcul du nombre de jours de congés décomptés.
 /// </summary>
-public class Holiday : TenantEntity
+public class Holiday : BaseEntity
 {
     public string Name { get; set; } = string.Empty;
     public DateTime Date { get; set; }

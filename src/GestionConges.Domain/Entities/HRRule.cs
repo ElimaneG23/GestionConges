@@ -7,7 +7,7 @@ namespace GestionConges.Domain.Entities
     /// Règle RH paramétrable par entreprise (US9.1), modèle clé/valeur pour rester
     /// extensible sans changer le schéma (ex: MaxConsecutiveDays = "20").
     /// </summary>
-    public class HRRule : TenantEntity
+    public class HRRule : BaseEntity
     {
         public HRRuleKey Key { get; set; }
         public string Value { get; set; } = string.Empty;

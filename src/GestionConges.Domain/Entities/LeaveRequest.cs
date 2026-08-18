@@ -6,7 +6,7 @@ namespace GestionConges.Domain.Entities;
 /// <summary>
 /// Demande de congé soumise par un employé et traitée par son manager.
 /// </summary>
-public class LeaveRequest : TenantEntity
+public class LeaveRequest : BaseEntity
 {
     public Guid UserId { get; set; }
     public User? User { get; set; }

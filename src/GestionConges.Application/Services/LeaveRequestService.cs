@@ -154,7 +154,7 @@ public class LeaveRequestService : ILeaveRequestService
 
         // Notifie l'employé (Sprint 7 - US7.2 / US7.3)
         await _notificationService.NotifyAsync(
-            request.TenantId, request.UserId,
+            request.TenantId!.Value, request.UserId,
             dto.Approve ? "Demande approuvée" : "Demande refusée",
             dto.Approve
                 ? $"Votre demande du {request.StartDate:dd/MM/yyyy} au {request.EndDate:dd/MM/yyyy} a été approuvée."

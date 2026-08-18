@@ -3,7 +3,7 @@ using GestionConges.Domain.Enums;
 
 namespace GestionConges.Domain.Entities;
 
-public class Notification : TenantEntity
+public class Notification : BaseEntity
 {
     public Guid UserId { get; set; }
     public User? User { get; set; }
